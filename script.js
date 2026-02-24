@@ -1,35 +1,19 @@
 // ---------------------------
-// Firebase imports
+// Local events object
 // ---------------------------
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
-
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyA5LmONt-L_kyC6zHHihn-hAFyMYxW0pqA",
-  authDomain: "school-hub-8ead9.firebaseapp.com",
-  databaseURL: "https://school-hub-8ead9-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "school-hub-8ead9",
-  storageBucket: "school-hub-8ead9.firebasestorage.app",
-  messagingSenderId: "326440268613",
-  appId: "1:326440268613:web:7b6d53f78f666fc37fc42c"
+const events = {
+  "2026-02-24": { news: "Sanskrit Exam (50 marks)", holiday: "", special: "" },
+  "2026-02-26": { news: "English Exam (50 marks)", holiday: "", special: "" },
+  "2026-02-28": { news: "Hindi Exam (50 marks)", holiday: "", special: "" },
+  "2026-03-02": { news: "Math Exam (50 marks)", holiday: "", special: "" },
+  "2026-03-05": { news: "Bio Exam (50 marks)", holiday: "", special: "" },
+  "2026-03-07": { news: "Physics/Chemistry Exam (50 marks)", holiday: "", special: "" },
+  "2026-03-09": { news: "History Exam (50 marks)", holiday: "", special: "" },
+  "2026-03-11": { news: "Geography/Civics Exam (50 marks)", holiday: "", special: "" },
+  "2026-03-13": { news: "Computer Exam (50 marks)", holiday: "", special: "" },
+  "2026-02-25": { news: "", holiday: "Weekend", special: "" },
+  "2026-03-03": { news: "", holiday: "Weekend", special: "" }
 };
-
-// ---------------------------
-// Initialize Firebase
-// ---------------------------
-const app = initializeApp(firebaseConfig);
-const database = getDatabase(app);
-
-// ---------------------------
-// Event storage
-// ---------------------------
-let events = {}; // { "YYYY-MM-DD": {news:"", holiday:"", special:""} }
 
 // ---------------------------
 // Elements
@@ -38,59 +22,28 @@ const calendarEl = document.getElementById('calendarContainer');
 const newsBox = document.getElementById('newsBox');
 const holidayBox = document.getElementById('holidayBox');
 const specialBox = document.getElementById('specialBox');
-const adminBtn = document.getElementById('adminBtn');
 
 // ---------------------------
-// Fetch data from Firebase
-// ---------------------------
-const eventsRef = ref(database, 'events');
-onValue(eventsRef, (snapshot) => {
-  events = snapshot.val() || {};
-  renderCalendar(); // refresh calendar buttons with colors
-});
-
-// ---------------------------
-// Admin button
-// ---------------------------
-adminBtn.addEventListener('click', () => {
-  const date = prompt("Enter date (YYYY-MM-DD):");
-  if (!date) return;
-  const newsText = prompt("Enter news (leave blank if none):");
-  const holidayText = prompt("Enter holiday (leave blank if none):");
-  const specialText = prompt("Enter special event (leave blank if none):");
-
-  set(ref(database, 'events/' + date), {
-    news: newsText || "",
-    holiday: holidayText || "",
-    special: specialText || ""
-  });
-  alert('Data saved for ' + date);
-});
-
-// ---------------------------
-// Render calendar buttons
+// Render calendar
 // ---------------------------
 function renderCalendar() {
-  if (!calendarEl) return;
-  calendarEl.innerHTML = '';
+  calendarEl.innerHTML = "";
 
-  const today = new Date();
-  const year = today.getFullYear();
-  const month = today.getMonth();
+  const year = 2026;
+  const month = 1; // February = 1 (0-based)
+  const lastDay = new Date(year, month + 1, 0).getDate();
 
-  const lastDay = new Date(year, month + 1, 0);
-
-  for (let day = 1; day <= lastDay.getDate(); day++) {
+  for (let day = 1; day <= lastDay; day++) {
     const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
     const btn = document.createElement('button');
     btn.innerText = day;
     btn.className = 'dateBtn';
 
-    // Color based on event type
+    // Color based on event
     if (events[dateStr]) {
       if (events[dateStr].holiday) btn.classList.add('holiday');
-      else if (events[dateStr].special) btn.classList.add('special');
-      else if (events[dateStr].news) btn.classList.add('news');
+      if (events[dateStr].news) btn.classList.add('exam');
+      if (events[dateStr].special) btn.classList.add('special');
     }
 
     btn.addEventListener('click', () => {
@@ -109,6 +62,4 @@ function renderCalendar() {
 // ---------------------------
 // Initial render
 // ---------------------------
-document.addEventListener('DOMContentLoaded', () => {
-  renderCalendar();
-});
+document.addEventListener('DOMContentLoaded', renderCalendar);
