@@ -1,33 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>School Hub</title>
-  <style>
-    body { font-family: Arial; max-width: 600px; margin: 20px auto; padding: 10px; }
-    #calendarContainer { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 15px; }
-    .dateBtn { padding: 8px 12px; cursor: pointer; border: 1px solid #ccc; border-radius: 4px; background: #f0f0f0; }
-    .dateBtn.selected { background: #2d89ef; color: white; }
-    #newsBox, #holidayBox { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; min-height: 40px; background: #f9f9f9; }
-    #adminBtn { padding: 10px 20px; font-size: 16px; cursor: pointer; background: #2d89ef; color: white; border: none; border-radius: 5px; }
-    #adminBtn:hover { background-color: #1b5dab; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>School Hub 2026</title>
+<style>
+  body { font-family: Arial; max-width: 700px; margin: 20px auto; padding: 10px; }
+  h1 { text-align: center; color: #2d89ef; margin-bottom: 20px; }
+
+  /* Calendar buttons */
+  #calendarContainer { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 15px; justify-content: center; }
+  .dateBtn { padding: 8px 12px; cursor: pointer; border: 1px solid #ccc; border-radius: 4px; background: #f0f0f0; }
+  .dateBtn.selected { background: #2d89ef; color: white; }
+
+  /* Info boxes */
+  #newsBox, #holidayBox, #specialBox { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; min-height: 40px; background: #f9f9f9; }
+
+  /* Color-coded for events */
+  .exam { background-color: #fffa65; }
+  .holiday { background-color: #ff6b6b; color: white; }
+  .news { background-color: #6bcfff; color: white; }
+  .special { background-color: #9b59b6; color: white; }
+
+</style>
 </head>
 <body>
-  <h2>School Hub</h2>
 
-  <!-- Calendar -->
-  <div id="calendarContainer"></div>
+<h1>2026 School Hub</h1>
 
-  <!-- News & Holiday Boxes -->
-  <div id="newsBox">No announcements</div>
-  <div id="holidayBox">No holiday</div>
+<div id="calendarContainer"></div>
 
-  <!-- Admin Button -->
-  <button id="adminBtn">Admin</button>
+<div id="newsBox">News: None</div>
+<div id="holidayBox">Holiday: None</div>
+<div id="specialBox">Special: None</div>
 
-  <!-- JS -->
-  <script type="module" src="script.js"></script>
+<script type="module" src="script.js"></script>
 </body>
 </html>
