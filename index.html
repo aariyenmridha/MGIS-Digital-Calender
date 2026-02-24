@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>School Hub</title>
+  <style>
+    body { font-family: Arial; max-width: 600px; margin: 20px auto; padding: 10px; }
+    #calendarContainer { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 15px; }
+    .dateBtn { padding: 8px 12px; cursor: pointer; border: 1px solid #ccc; border-radius: 4px; background: #f0f0f0; }
+    .dateBtn.selected { background: #2d89ef; color: white; }
+    #newsBox, #holidayBox { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; min-height: 40px; background: #f9f9f9; }
+    #adminBtn { padding: 10px 20px; font-size: 16px; cursor: pointer; background: #2d89ef; color: white; border: none; border-radius: 5px; }
+    #adminBtn:hover { background-color: #1b5dab; }
+  </style>
+</head>
+<body>
+  <h2>School Hub</h2>
+
+  <!-- Calendar -->
+  <div id="calendarContainer"></div>
+
+  <!-- News & Holiday Boxes -->
+  <div id="newsBox">No announcements</div>
+  <div id="holidayBox">No holiday</div>
+
+  <!-- Admin Button -->
+  <button id="adminBtn">Admin</button>
+
+  <!-- JS -->
+  <script type="module" src="script.js"></script>
+</body>
+</html>
