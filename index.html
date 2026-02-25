@@ -27,6 +27,88 @@
   #newsBox, #holidayBox, #specialBox {
     border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; min-height: 40px; background: #f9f9f9;
   }
+  <!-- Top corner toggle -->
+<button id="teacherToggle" 
+        style="position:fixed;top:10px;right:10px;z-index:1000;"
+        onclick="toggleTeacherButtons()">Teacher Panel</button>
+
+<!-- Hidden teacher buttons -->
+<div id="teacherButtons" style="display:none;position:fixed;top:50px;right:10px;z-index:1000;background:#fff;padding:10px;border:1px solid #ccc;border-radius:5px;">
+  <button onclick="showAddNote()">Add Note</button>
+  <button onclick="showViewNotes()">View Notes</button>
+</div>
+
+<!-- Add Note Section -->
+<div id="addNoteDiv" style="display:none;margin-top:10px;">
+  <input type="password" id="addPass" placeholder="Password to add"><br>
+  <textarea id="teacherComment" placeholder="Write your note here"></textarea><br>
+  <button onclick="submitTeacherNote()">Submit</button>
+</div>
+
+<!-- View Notes Section -->
+<div id="viewNotesDiv" style="display:none;margin-top:10px;">
+  <input type="password" id="viewPass" placeholder="Password to view"><br>
+  <button onclick="displayNotes()">Show Notes</button>
+  <div id="notesDisplay"></div>
+</div>
+
+<script>
+const password = "MGIS123"; // both add/view can use same
+
+// Store notes locally
+let notes = []; // {text, timestamp}
+
+// toggle Add/View buttons
+function toggleTeacherButtons() {
+    const btnDiv = document.getElementById("teacherButtons");
+    btnDiv.style.display = btnDiv.style.display === "none" ? "block" : "none";
+}
+
+function showAddNote() {
+    document.getElementById("addNoteDiv").style.display = "block";
+    document.getElementById("viewNotesDiv").style.display = "none";
+}
+
+function showViewNotes() {
+    document.getElementById("viewNotesDiv").style.display = "block";
+    document.getElementById("addNoteDiv").style.display = "none";
+}
+
+// Add note locally
+function submitTeacherNote() {
+    const pass = document.getElementById("addPass").value;
+    const comment = document.getElementById("teacherComment").value.trim();
+    if(pass !== password) { alert("Wrong password"); return; }
+    if(comment === "") return;
+    const timestamp = new Date().getTime();
+    notes.push({text: comment, timestamp});
+    alert("Note added!");
+    document.getElementById("teacherComment").value = "";
+}
+
+// Display notes
+function displayNotes() {
+    const pass = document.getElementById("viewPass").value;
+    if(pass !== password) { alert("Wrong password"); return; }
+    const now = new Date().getTime();
+    const THIRTY_DAYS = 30*24*60*60*1000;
+    
+    // filter notes older than 30 days
+    notes = notes.filter(n => now - n.timestamp < THIRTY_DAYS);
+
+    const displayDiv = document.getElementById("notesDisplay");
+    displayDiv.innerHTML = "";
+    if(notes.length === 0) {
+        displayDiv.innerHTML = "<i>No notes</i>";
+        return;
+    }
+    notes.forEach(n => {
+        const p = document.createElement("p");
+        p.textContent = n.text;
+        displayDiv.appendChild(p);
+    });
+}
+</script>
 </style>
 </head>
 <body>
