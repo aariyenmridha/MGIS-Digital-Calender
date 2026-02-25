@@ -1,8 +1,20 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 const calendarEl = document.getElementById('calendarContainer');
 const newsBox = document.getElementById('newsBox');
 const holidayBox = document.getElementById('holidayBox');
 const specialBox = document.getElementById('specialBox');
-
+const firebaseConfig = {
+  apiKey: "AIzaSyA5LmONt-L_kyC6zHHihn-hAFyMYxW0pqA",
+  authDomain: "school-hub-8ead9.firebaseapp.com",
+  databaseURL: "https://school-hub-8ead9-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "school-hub-8ead9",
+  storageBucket: "school-hub-8ead9.firebasestorage.app",
+  messagingSenderId: "326440268613",
+  appId: "1:326440268613:web:0e3a26cc2a8584d17fc42c"
+};
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
 // ---------------------------
 // Google Sheet CSV link
 // Replace with your sheet's published CSV link
@@ -90,4 +102,5 @@ function renderCalendar() {
 
 // Initial empty render until sheet loads
 renderCalendar();
+
 
