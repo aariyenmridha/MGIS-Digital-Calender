@@ -27,35 +27,89 @@
   #newsBox, #holidayBox, #specialBox {
     border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; min-height: 40px; background: #f9f9f9;
   }
+
+  /* Teacher panel styles */
+  #teacherToggle {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+    padding: 6px 10px;
+    background: #2d89ef;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  #teacherButtons {
+    display: none;
+    position: fixed;
+    top: 50px;
+    right: 10px;
+    z-index: 1000;
+    background: #fff;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  #addNoteDiv, #viewNotesDiv {
+    display: none;
+    margin-top: 10px;
+  }
+
+  #addNoteDiv textarea {
+    width: 200px;
+    height: 60px;
+  }
+
+  #viewNotesDiv #notesDisplay {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 5px;
+    margin-top: 5px;
+    background: #f9f9f9;
+  }
+
 </style>
 </head>
 <body>
-<!-- Teacher Panel -->
-<button id="teacherToggle" onclick="toggleTeacherButtons()">
-  Teacher Panel
-</button>
 
-<div id="teacherButtons" style="display:none;">
+<!-- Teacher Panel -->
+<button id="teacherToggle" onclick="toggleTeacherButtons()">Teacher Panel</button>
+
+<div id="teacherButtons">
   <button onclick="showAddNote()">Add Note</button>
   <button onclick="showViewNotes()">View Notes</button>
 </div>
 
-<div id="addNoteDiv" style="display:none;">
+<div id="addNoteDiv">
   <input type="password" id="addPass" placeholder="Password to add"><br>
-  <textarea id="teacherComment" placeholder="Write your note"></textarea><br>
+  <textarea id="teacherComment" placeholder="Write your note here"></textarea><br>
   <button onclick="submitTeacherNote()">Submit</button>
 </div>
 
-<div id="viewNotesDiv" style="display:none;">
+<div id="viewNotesDiv">
   <input type="password" id="viewPass" placeholder="Password to view"><br>
   <button onclick="displayNotes()">Show Notes</button>
   <div id="notesDisplay"></div>
 </div>
+
 <h1>2026 School Hub</h1>
+
 <div id="calendarContainer"></div>
 <div id="newsBox">News: None</div>
 <div id="holidayBox">Holiday: None</div>
 <div id="specialBox">Special: None</div>
+
+<!-- Firebase scripts -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
+
+<!-- Main JS -->
 <script type="module" src="script.js"></script>
+
 </body>
 </html>
