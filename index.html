@@ -1,115 +1,105 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" type="image/jpeg" href="favicon.jpeg.jpeg">
-<link rel="manifest" href="manifest.json">
-<title>School Hub 2026</title>
-<style>
-  body { font-family: Arial; max-width: 800px; margin: 20px auto; padding: 10px; }
-  h1 { text-align: center; color: #2d89ef; margin-bottom: 20px; }
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+const calendarEl = document.getElementById('calendarContainer');
+const newsBox = document.getElementById('newsBox');
+const holidayBox = document.getElementById('holidayBox');
+const specialBox = document.getElementById('specialBox');
+const firebaseConfig = {
+apiKey: "AIzaSyA5LmONt-L_kyC6zHHihn-hAFyMYxW0pqA",
+authDomain: "school-hub-8ead9.firebaseapp.com",
+databaseURL: "https://school-hub-8ead9-default-rtdb.asia-southeast1.firebasedatabase.app",
+projectId: "school-hub-8ead9",
+storageBucket: "school-hub-8ead9.firebasestorage.app",
+messagingSenderId: "326440268613",
+appId: "1:326440268613:web:0e3a26cc2a8584d17fc42c"
+};
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+// ---------------------------
+// Google Sheet CSV link
+// Replace with your sheet's published CSV link
+// ---------------------------
+const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSH2be5QfxwCWJGzRN1dlFRibCvXf2ecbJ_c_AH0M_kld_smRK3Ss5rmqPsXXs5l8rOylDh8q18JIGH/pub?output=csv";
 
-  .month { margin-bottom: 25px; }
-  .month-name { text-align: center; font-size: 20px; margin-bottom: 10px; color: #1b5dab; }
-  .calendar { display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; }
-  .dateBtn { padding: 6px 10px; cursor: pointer; border: 1px solid #ccc; border-radius: 4px; background: #f0f0f0; }
-  .dateBtn.selected { background: #2d89ef; color: white; }
-  .dateBtn.today { border: 2px solid #ff6b6b; }
+let events = {}; // Will hold events from sheet
 
-  /* Event colors */
-  .exam { background-color: #fffa65; }
-  .holiday { background-color: #ff6b6b; color: white; }
-  .news { background-color: #6bcfff; color: white; }
-  .special { background-color: #9b59b6; color: white; }
+// ---------------------------
+// Fetch sheet CSV
+// ---------------------------
+fetch(SHEET_URL)
+.then(res => res.text())
+.then(csvText => {
+const lines = csvText.split("\n").slice(1); // skip header
+lines.forEach(line => {
+const [date, news, holiday, special] = line.split(",");
+if (date) {
+events[date.trim()] = {
+news: news?.trim() || "",
+holiday: holiday?.trim() || "",
+special: special?.trim() || ""
+};
+}
+});
+renderCalendar();
+})
+.catch(err => console.error("Error fetching sheet:", err));
 
-  /* Info boxes */
-  #newsBox, #holidayBox, #specialBox {
-    border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; min-height: 40px; background: #f9f9f9;
-  }
+// ---------------------------
+// Render 12 months
+// ---------------------------
+function renderCalendar() {
+calendarEl.innerHTML = "";
+const year = 2026;
+const todayStr = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
 
-  /* Teacher panel styles */
-  #teacherToggle {
-    position: fixed;
-    top: 10px;
-    right: 10px;
-    z-index: 1000;
-    padding: 6px 10px;
-    background: #2d89ef;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
+for (let month = 0; month < 12; month++) {
+const monthDiv = document.createElement('div');
+monthDiv.className = 'month';
 
-  #teacherButtons {
-    display: none;
-    position: fixed;
-    top: 50px;
-    right: 10px;
-    z-index: 1000;
-    background: #fff;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
+const monthName = new Date(year, month, 1).toLocaleString('default', { month: 'long' });  
+const monthTitle = document.createElement('div');  
+monthTitle.className = 'month-name';  
+monthTitle.innerText = monthName;  
+monthDiv.appendChild(monthTitle);  
 
-  #addNoteDiv, #viewNotesDiv {
-    display: none;
-    margin-top: 10px;
-  }
+const calendar = document.createElement('div');  
+calendar.className = 'calendar';  
 
-  #addNoteDiv textarea {
-    width: 200px;
-    height: 60px;
-  }
+const lastDay = new Date(year, month + 1, 0).getDate();  
 
-  #viewNotesDiv #notesDisplay {
-    max-height: 200px;
-    overflow-y: auto;
-    border: 1px solid #ccc;
-    padding: 5px;
-    margin-top: 5px;
-    background: #f9f9f9;
-  }
+for (let day = 1; day <= lastDay; day++) {  
+  const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;  
+  const btn = document.createElement('button');  
+  btn.innerText = day;  
+  btn.className = 'dateBtn';  
 
-</style>
-</head>
-<body>
+  // Color by event  
+  if (events[dateStr]) {  
+    if (events[dateStr].holiday) btn.classList.add('holiday');  
+    if (events[dateStr].news) btn.classList.add('exam');  
+    if (events[dateStr].special) btn.classList.add('special');  
+  }  
 
-<!-- Teacher Panel -->
-<button id="teacherToggle" onclick="toggleTeacherButtons()">Teacher Panel</button>
+  // Highlight today  
+  if (dateStr === todayStr) btn.classList.add('today');  
 
-<div id="teacherButtons">
-  <button onclick="showAddNote()">Add Note</button>
-  <button onclick="showViewNotes()">View Notes</button>
-</div>
+  btn.addEventListener('click', () => {  
+    document.querySelectorAll('.dateBtn').forEach(b => b.classList.remove('selected'));  
+    btn.classList.add('selected');  
 
-<div id="addNoteDiv">
-  <input type="password" id="addPass" placeholder="Password to add"><br>
-  <textarea id="teacherComment" placeholder="Write your note here"></textarea><br>
-  <button onclick="submitTeacherNote()">Submit</button>
-</div>
+    newsBox.innerText = "News: " + (events[dateStr]?.news || "None");  
+    holidayBox.innerText = "Holiday: " + (events[dateStr]?.holiday || "None");  
+    specialBox.innerText = "Special: " + (events[dateStr]?.special || "None");  
+  });  
 
-<div id="viewNotesDiv">
-  <input type="password" id="viewPass" placeholder="Password to view"><br>
-  <button onclick="displayNotes()">Show Notes</button>
-  <div id="notesDisplay"></div>
-</div>
+  calendar.appendChild(btn);  
+}  
 
-<h1>2026 School Hub</h1>
+monthDiv.appendChild(calendar);  
+calendarEl.appendChild(monthDiv);
 
-<div id="calendarContainer"></div>
-<div id="newsBox">News: None</div>
-<div id="holidayBox">Holiday: None</div>
-<div id="specialBox">Special: None</div>
+}
+}
 
-<!-- Firebase scripts -->
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
-
-<!-- Main JS -->
-<script type="module" src="script.js"></script>
-
-</body>
-</html>
+// Initial empty render until sheet loads
+renderCalendar();
