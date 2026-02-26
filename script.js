@@ -1,3 +1,8 @@
+window.toggleTeacherButtons = function() { ... }
+window.showAddNote = function() { ... }
+window.showViewNotes = function() { ... }
+window.submitTeacherNote = async function() { ... }
+window.displayNotes = async function() { ... }
 // ---------------------------
 // Teacher Panel with Firebase
 // ---------------------------
@@ -179,3 +184,4 @@ function renderCalendar() {
 
 // Initial render
 renderCalendar();
+
