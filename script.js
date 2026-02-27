@@ -3,7 +3,7 @@ const newsBox = document.getElementById('newsBox');
 const holidayBox = document.getElementById('holidayBox');
 const specialBox = document.getElementById('specialBox');
 
-const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSH2be5QfxwCWJGzRN1dlFRibCvXf2ecbJ_c_AH0M_kld_smRK3Ss5rmqPsXXs5l8rOylDh8q18JIGH/pub?output=csv";
+const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSH2be5QfxwCWJGzRN1dlFRibCvXf2ecbJ_c_AH0M_kld_smRK3Ss5rmqPsXXs5l8rOylDh8q18JIGH/pubhtml";
 
 let events = {};
 
@@ -90,3 +90,4 @@ function renderCalendar() {
     calendarEl.appendChild(monthDiv);
   }
 }
+
