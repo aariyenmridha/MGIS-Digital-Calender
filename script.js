@@ -3,11 +3,15 @@ const newsBox = document.getElementById('newsBox');
 const holidayBox = document.getElementById('holidayBox');
 const specialBox = document.getElementById('specialBox');
 
-const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSH2be5QfxwCWJGzRN1dlFRibCvXf2ecbJ_c_AH0M_kld_smRK3Ss5rmqPsXXs5l8rOylDh8q18JIGH/pubhtml";
+const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSH2be5QfxwCWJGzRN1dlFRibCvXf2ecbJ_c_AH0M_kld_smRK3Ss5rmqPsXXs5l8rOylDh8q18JIGH/pub?output=csv";
 
 let events = {};
+const year = 2026;
+const todayStr = new Date().toISOString().split('T')[0];
 
-fetch(SHEET_URL)
+renderCalendar(); // ALWAYS render first
+
+fetch(SHEET_URL + "&cache=" + Date.now())
   .then(res => res.text())
   .then(csvText => {
     const lines = csvText.split("\n").slice(1);
@@ -24,16 +28,14 @@ fetch(SHEET_URL)
       }
     });
 
-    renderCalendar();
+    renderCalendar(); // re-render with data
   })
   .catch(err => {
-    console.error("Sheet fetch error:", err);
+    console.log("Sheet failed but site still works.");
   });
 
 function renderCalendar() {
   calendarEl.innerHTML = "";
-  const year = 2026;
-  const todayStr = new Date().toISOString().split('T')[0];
 
   for (let month = 0; month < 12; month++) {
 
@@ -90,4 +92,3 @@ function renderCalendar() {
     calendarEl.appendChild(monthDiv);
   }
 }
-
